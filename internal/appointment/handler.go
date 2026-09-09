@@ -18,6 +18,41 @@ type UpdateStatusInput struct {
 	Status string `json:"status" binding:"required,oneof=PENDING CONFIRMED IN_PROGRESS COMPLETED CANCELLED"`
 }
 
+
+// @Summary Get all appointments
+// @Tags appointments
+// @Security BearerAuth
+// @Produce json
+// @Router /appointments [get]
+func GetAll(c *gin.Context) {
+    var apps []database.Appointment
+    database.DB.Find(&apps)
+    c.JSON(http.StatusOK, apps)
+}
+
+// @Summary Get appointment by ID
+// @Tags appointments
+// @Security BearerAuth
+// @Param id path int true "ID"
+// @Router /appointments/{id} [get]
+func GetByID(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "Not implemented"}) }
+
+// @Summary Delete appointment
+// @Tags appointments
+// @Security BearerAuth
+// @Param id path int true "ID"
+// @Router /appointments/{id} [delete]
+func Delete(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "Not implemented"}) }
+
+// @Summary Create appointment
+// @Description Create a new appointment (defaults to PENDING)
+// @Tags appointments
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param request body CreateAppointmentInput true "Appointment Data"
+// @Success 201 {object} database.Appointment
+// @Router /appointments [post]
 func CreateAppointment(c *gin.Context) {
 	var input CreateAppointmentInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -59,6 +94,17 @@ func CreateAppointment(c *gin.Context) {
 	c.JSON(http.StatusCreated, appointment)
 }
 
+
+// @Summary Update appointment status
+// @Description Update status (PENDING, CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED)
+// @Tags appointments
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path int true "Appointment ID"
+// @Param request body UpdateStatusInput true "Status Data"
+// @Success 200 {object} database.Appointment
+// @Router /appointments/{id}/status [put]
 func UpdateStatus(c *gin.Context) {
 	id := c.Param("id")
 	var input UpdateStatusInput
@@ -81,3 +127,10 @@ func UpdateStatus(c *gin.Context) {
 
 	c.JSON(http.StatusOK, appointment)
 }
+
+// @Summary Update appointment details
+// @Tags appointments
+// @Security BearerAuth
+// @Param id path int true "ID"
+// @Router /appointments/{id} [put]
+func Update(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "Not implemented"}) }

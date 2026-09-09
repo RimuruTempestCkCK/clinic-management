@@ -20,6 +20,15 @@ type LoginInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
+
+// @Summary Register User
+// @Description Register a new user (ADMIN, DOCTOR, STAFF, PATIENT)
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body RegisterInput true "Registration Data"
+// @Success 201 {object} map[string]interface{}
+// @Router /auth/register [post]
 func Register(c *gin.Context) {
 	var input RegisterInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -47,6 +56,15 @@ func Register(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully", "user_id": user.ID})
 }
 
+
+// @Summary Login User
+// @Description Login and get JWT Token
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param request body LoginInput true "Login Data"
+// @Success 200 {object} map[string]interface{}
+// @Router /auth/login [post]
 func Login(c *gin.Context) {
 	var input LoginInput
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -73,3 +91,15 @@ func Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"token": token})
 }
+
+// @Summary Refresh Token
+// @Tags auth
+// @Produce json
+// @Router /auth/refresh [post]
+func Refresh(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "Not implemented"}) }
+
+// @Summary Logout
+// @Tags auth
+// @Produce json
+// @Router /auth/logout [post]
+func Logout(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "Not implemented"}) }
