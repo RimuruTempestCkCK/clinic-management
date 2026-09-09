@@ -24,21 +24,8 @@ func ConnectDB() {
 
 	log.Println("Database connected successfully")
 
-	// Migrate schemas
-	err = db.AutoMigrate(
-		&User{},
-		&Patient{},
-		&Doctor{},
-		&Specialization{},
-		&Appointment{},
-		&MedicalRecord{},
-		&Medicine{},
-		&Prescription{},
-		&PrescriptionItem{},
-	)
-	if err != nil {
-		log.Fatal("Failed to migrate database. \n", err)
-	}
+	// Schema creation is handled manually via seed_with_schema.sql
+	// db.AutoMigrate(...) is removed to prevent constraint conflicts.
 
 	DB = db
 }
