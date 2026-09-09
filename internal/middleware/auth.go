@@ -46,13 +46,17 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		parts := strings.Split(authHeader, " ")
-		if len(parts) != 2 || parts[0] != "Bearer" {
+		var tokenString string
+		if len(parts) == 2 && parts[0] == "Bearer" {
+			tokenString = parts[1]
+		} else if len(parts) == 1 {
+			tokenString = parts[0] // Tolerate if user forgets 'Bearer '
+		} else {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token format"})
 			c.Abort()
 			return
 		}
 
-		tokenString := parts[1]
 		claims := &Claims{}
 
 		if len(jwtSecret) == 0 {
@@ -75,30 +79,3 @@ func AuthMiddleware() gin.HandlerFunc {
 	}
 }
 
-func RoleMiddleware(allowedRoles ...string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		role, exists := c.Get("role")
-		if !exists {
-			c.JSON(http.StatusForbidden, gin.H{"error": "Role not found"})
-			c.Abort()
-			return
-		}
-
-		userRole := role.(string)
-		isAllowed := false
-		for _, allowedRole := range allowedRoles {
-			if userRole == allowedRole {
-				isAllowed = true
-				break
-			}
-		}
-
-		if !isAllowed {
-			c.JSON(http.StatusForbidden, gin.H{"error": "You do not have permission to access this resource"})
-			c.Abort()
-			return
-		}
-
-		c.Next()
-	}
-}
