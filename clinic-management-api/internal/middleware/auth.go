@@ -10,7 +10,13 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
+func getJWTSecret() []byte {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		return []byte("supersecretkey")
+	}
+	return []byte(secret)
+}
 
 type Claims struct {
 	UserID uint   `json:"user_id"`
@@ -19,10 +25,6 @@ type Claims struct {
 }
 
 func GenerateToken(userID uint, role string) (string, error) {
-	if len(jwtSecret) == 0 {
-		jwtSecret = []byte("supersecretkey") // fallback
-	}
-	
 	expirationTime := time.Now().Add(24 * time.Hour)
 	claims := &Claims{
 		UserID: userID,
@@ -33,7 +35,7 @@ func GenerateToken(userID uint, role string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(jwtSecret)
+	return token.SignedString(getJWTSecret())
 }
 
 func AuthMiddleware() gin.HandlerFunc {
@@ -58,17 +60,16 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		claims := &Claims{}
-
-		if len(jwtSecret) == 0 {
-			jwtSecret = []byte("supersecretkey")
-		}
-
 		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtSecret, nil
+			return getJWTSecret(), nil
 		})
 
 		if err != nil || !token.Valid {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			if err != nil {
+				c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token", "detail": err.Error()})
+			} else {
+				c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token", "detail": "token.Valid is false"})
+			}
 			c.Abort()
 			return
 		}
