@@ -1,3 +1,22 @@
+<script>
+    import { onMount } from 'svelte';
+    import { fetchWithAuth } from '$lib/api';
+    
+    let data = $state([]);
+    let loading = $state(true);
+    let error = $state('');
+
+    onMount(async () => {
+        try {
+            data = await fetchWithAuth('/medical-records');
+        } catch (e) {
+            error = e.message;
+        } finally {
+            loading = false;
+        }
+    });
+</script>
+
 <svelte:head>
     <title>Medical Records · Clinic Management</title>
 </svelte:head>
@@ -22,8 +41,37 @@
                 <h2 class="card-title">Medical Records List</h2>
             </div>
         </div>
-        <div style="padding: 24px; color: var(--t-muted);">
-            This page is under construction. Data table will be implemented here.
-        </div>
+        
+        {#if loading}
+            <div style="padding: 24px; color: var(--t-muted);">Loading data...</div>
+        {:else if error}
+            <div style="padding: 24px; color: var(--danger);">{error}</div>
+        {:else}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Diagnosis</th>
+                        <th>Treatment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each data as item}
+                        <tr>
+                            <td class="cell-date">{new Date(item.CreatedAt).toLocaleDateString()}</td>
+                            <td class="cell-name">{item.Patient?.Name || `ID: ${item.PatientID}`}</td>
+                            <td>{item.Doctor?.Name || `ID: ${item.DoctorID}`}</td>
+                            <td>{item.Diagnosis}</td>
+                            <td>{item.Treatment}</td>
+                        </tr>
+                    {/each}
+                    {#if data.length === 0}
+                        <tr><td colspan="5" style="text-align: center; color: var(--t-muted); padding: 1rem;">No medical records found.</td></tr>
+                    {/if}
+                </tbody>
+            </table>
+        {/if}
     </section>
 </div>

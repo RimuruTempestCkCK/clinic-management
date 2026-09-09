@@ -1,3 +1,22 @@
+<script>
+    import { onMount } from 'svelte';
+    import { fetchWithAuth } from '$lib/api';
+    
+    let data = $state([]);
+    let loading = $state(true);
+    let error = $state('');
+
+    onMount(async () => {
+        try {
+            data = await fetchWithAuth('/patients');
+        } catch (e) {
+            error = e.message;
+        } finally {
+            loading = false;
+        }
+    });
+</script>
+
 <svelte:head>
     <title>Patients · Clinic Management</title>
 </svelte:head>
@@ -22,8 +41,37 @@
                 <h2 class="card-title">Patients List</h2>
             </div>
         </div>
-        <div style="padding: 24px; color: var(--t-muted);">
-            This page is under construction. Data table will be implemented here.
-        </div>
+        
+        {#if loading}
+            <div style="padding: 24px; color: var(--t-muted);">Loading data...</div>
+        {:else if error}
+            <div style="padding: 24px; color: var(--danger);">{error}</div>
+        {:else}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>DOB</th>
+                        <th>Gender</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each data as item}
+                        <tr>
+                            <td class="cell-name">{item.Name}</td>
+                            <td class="cell-date">{new Date(item.DOB).toLocaleDateString()}</td>
+                            <td>{item.Gender}</td>
+                            <td>{item.Phone}</td>
+                            <td>{item.Address}</td>
+                        </tr>
+                    {/each}
+                    {#if data.length === 0}
+                        <tr><td colspan="5" style="text-align: center; color: var(--t-muted); padding: 1rem;">No patients found.</td></tr>
+                    {/if}
+                </tbody>
+            </table>
+        {/if}
     </section>
 </div>
