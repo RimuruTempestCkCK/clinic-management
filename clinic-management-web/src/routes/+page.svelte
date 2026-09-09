@@ -2,9 +2,9 @@
     import { fetchWithAuth } from '$lib/api';
     import { onMount } from 'svelte';
     
-    let doctors = [];
-    let appointments = [];
-    let loading = true;
+    let doctors = $state([]);
+    let appointments = $state([]);
+    let loading = $state(true);
     
     onMount(async () => {
         if (!localStorage.getItem('token')) {

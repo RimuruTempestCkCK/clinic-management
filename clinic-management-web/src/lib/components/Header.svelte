@@ -1,7 +1,6 @@
 <script>
     import { page } from '$app/stores';
-
-    $: pathSegments = $page.url.pathname.split('/').filter(Boolean);
+    let pathSegments = $derived($page.url.pathname.split('/').filter(Boolean));
 </script>
 
 <header class="d-topbar">

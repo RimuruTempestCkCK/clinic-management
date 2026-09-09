@@ -7,6 +7,8 @@
     // We need to load the template JS scripts after components are mounted
     import { onMount } from 'svelte';
     
+    let { children } = $props();
+    
     onMount(() => {
         // Load runtime and vendor scripts
         const scripts = [
@@ -32,7 +34,7 @@
     <div class="main">
         <Header />
         <main class="content">
-            <slot />
+            {@render children()}
         </main>
         <Footer />
     </div>

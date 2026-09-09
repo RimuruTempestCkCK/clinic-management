@@ -20,7 +20,7 @@
         }
     ];
 
-    $: currentPath = $page.url.pathname;
+    let currentPath = $derived($page.url.pathname);
 </script>
 
 <aside class="d-sidebar">
