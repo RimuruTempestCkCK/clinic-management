@@ -1,89 +1,100 @@
-# 🏥 Clinic Management System API
+# 🏥 Clinic Management System
 
-This is the backend API for a complete Clinic Management System. Built using Go, Gin, GORM, and PostgreSQL (Supabase).
+A full-stack Clinic Management System monorepo, featuring a highly-performant **Golang** backend API and a beautiful, modern **SvelteKit** web frontend utilizing the Adminator template.
 
-## 🚀 Tech Stack
+This system is designed to handle daily clinic operations including user management, doctor scheduling, patient tracking, appointments, medical records, and prescriptions.
 
-- **Go (Golang)**
-- **Gin Framework** - Fast HTTP web framework
-- **GORM** - Developer-friendly ORM library
-- **PostgreSQL** - Hosted on Supabase (using Connection Pooling)
-- **JWT** - Secure stateless authentication
-- **Swagger / Swaggo** - Auto-generated interactive API Documentation
-- **Bcrypt** - Password hashing
+---
 
 ## 📂 Project Structure
 
-```text
-clinic-management-api/
-├── cmd/
-│   └── server/
-│       └── main.go       # Application Entrypoint
-├── docs/                 # Swagger Documentation Files
-├── internal/
-│   ├── appointment/      # Business logic & Handlers for Appointments
-│   ├── auth/             # Authentication & JWT generation
-│   ├── config/           # Configuration loaders
-│   ├── database/         # Database connection & Models
-│   ├── doctor/           # Handlers for Doctors
-│   ├── medical_record/   # Handlers for Medical Records
-│   ├── medicine/         # Handlers for Medicines
-│   ├── middleware/       # JWT & Role-Based Access Control (RBAC) middlewares
-│   ├── patient/          # Handlers for Patients
-│   ├── prescription/     # Handlers for Prescriptions
-│   └── user/             # Handlers for Users
-├── .env.example          # Environment variables template
-├── seed_with_schema.sql  # Database Schema & Seed Data (Dummy records)
-```
+This repository is structured as a monorepo containing two main projects:
 
-## 👥 Roles & Access Control
+- `clinic-management-api/` - The Backend REST API (Golang, Gin, GORM, PostgreSQL)
+- `clinic-management-web/` - The Frontend Web Application (SvelteKit 5, Adminator UI, Tailwind)
 
-The API implements strict RBAC (Role-Based Access Control):
-- **ADMIN**: Full access to all resources.
-- **DOCTOR**: Access to patients, appointments, medical records, and prescriptions.
-- **STAFF**: Can manage appointments and patients.
-- **PATIENT**: Can view their own records and book appointments.
+---
 
-## 🛠️ Setup & Installation
+## ⚙️ Backend (API)
 
-### 1. Database Setup (Supabase)
-Run the provided SQL script to create the schema and insert dummy data:
-1. Open your Supabase Dashboard -> **SQL Editor**.
-2. Copy the contents of `seed_with_schema.sql`.
-3. Run the script.
+The backend is a robust RESTful API built with Go, offering strict Role-Based Access Control (RBAC) and comprehensive Swagger documentation.
 
-### 2. Environment Variables
-Rename `.env.example` to `.env` and fill in your connection details:
-```env
-DATABASE_URL="postgres://postgres.[YOUR_PROJECT_REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres"
-JWT_SECRET="your_secret_key"
-PORT=8080
-```
+### Tech Stack
+- **Go (Golang)**
+- **Gin Framework** - Fast HTTP web framework
+- **GORM** - Developer-friendly ORM library
+- **PostgreSQL / Supabase** - Relational database
+- **JWT & Bcrypt** - Secure stateless authentication
+- **Swagger / Swaggo** - Auto-generated API documentation
 
-### 3. Run the API Server
+### Key Features
+- **RBAC (Role-Based Access Control):** Supports `ADMIN`, `DOCTOR`, `STAFF`, and `PATIENT` roles.
+- **Appointments Management:** Track status (Pending -> Confirmed -> In Progress -> Completed -> Cancelled).
+- **CORS Enabled:** Fully integrated with the frontend out-of-the-box.
+- **Database Seeding:** Pre-configured SQL scripts to seed the database with dummy data.
+
+### How to Run the API
+1. Navigate to the API directory:
+   ```bash
+   cd clinic-management-api
+   ```
+2. Rename `.env.example` to `.env` and fill in your connection details (e.g., Supabase Postgres URL).
+3. Run the database seed script `seed_with_schema.sql` in your database.
+4. Run the server:
+   ```bash
+   go run cmd/server/main.go
+   ```
+5. View API Documentation via Swagger: `http://localhost:8080/swagger/index.html`
+
+---
+
+## 🖥️ Frontend (Web)
+
+The frontend is a fast, reactive web application built with the latest Svelte 5 (Runes Mode), leveraging the elegant Adminator dashboard template.
+
+### Tech Stack
+- **Svelte 5 / SvelteKit** - Next-generation reactive web framework
+- **Adminator Template** - Professional dashboard UI shell
+- **Tailwind CSS** - Utility-first CSS framework
+- **Vite** - Lightning-fast frontend tooling
+
+### Key Features
+- **Beautiful Auth Flow:** Clinic-themed custom login page.
+- **Dynamic Dashboard:** Real-time metrics, recent appointments, and doctor rosters fetched directly from the backend.
+- **Responsive Layout:** Reusable Svelte components (`Sidebar`, `Header`, `Footer`) perfectly integrated with the template's layout system.
+
+### How to Run the Web App
+1. Navigate to the Web directory:
+   ```bash
+   cd clinic-management-web
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
+4. Access the application in your browser: `http://localhost:5173`
+   *(Login with `admin@clinic.com` / `password123` based on the database seeder).*
+
+---
+
+## 🚀 Quick Start (Running Both)
+
+To run the complete system locally, you'll need two terminal windows:
+
+**Terminal 1 (Backend):**
 ```bash
+cd clinic-management-api
 go run cmd/server/main.go
 ```
 
-## 📖 API Documentation (Swagger UI)
+**Terminal 2 (Frontend):**
+```bash
+cd clinic-management-web
+npm run dev
+```
 
-Once the server is running, you can access the interactive API documentation and test endpoints directly from your browser:
-👉 **http://localhost:8080/swagger/index.html**
-
-### How to Authenticate in Swagger
-1. Call `POST /api/v1/auth/login` with email `admin@clinic.com` and password `password123`.
-2. Copy the token from the response.
-3. Scroll to the top of Swagger, click the **Authorize** button.
-4. Paste the token exactly as it is (no need to type "Bearer", the system handles it) and click Authorize.
-
-## 🔗 Endpoints Overview
-
-| Feature | Endpoints |
-| --- | --- |
-| **Auth** | `POST /auth/register`, `POST /auth/login` |
-| **Patients** | `GET /patients`, `POST /patients`, `PUT /patients/:id`, `DELETE /patients/:id` |
-| **Doctors** | `GET /doctors`, `POST /doctors`, `PUT /doctors/:id`, `DELETE /doctors/:id` |
-| **Appointments**| `GET /appointments`, `POST /appointments`, `PUT /appointments/:id/status` |
-| **Medical Rec.**| `GET /medical-records`, `POST /medical-records`, `GET /medical-records/:id` |
-| **Medicines** | `GET /medicines`, `POST /medicines`, `PUT /medicines/:id`, `DELETE /medicines/:id` |
-| **Prescriptions**|`GET /prescriptions`, `POST /prescriptions`, `GET /prescriptions/:id` |
+Visit `http://localhost:5173` to interact with the full system!
