@@ -36,25 +36,19 @@
         </div>
     </div>
     
-    <div class="nav-groups">
-        {#each navigation as group}
-            <div class="nav-group">
-                <div class="nav-label">{group.label}</div>
-                <ul class="nav-list">
-                    {#each group.items as item}
-                        <li>
-                            <a class="nav-item {currentPath === item.href ? 'is-active' : ''}" href="{item.href}">
-                                <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    {@html item.icon}
-                                </svg>
-                                {item.text}
-                            </a>
-                        </li>
-                    {/each}
-                </ul>
-            </div>
-        {/each}
-    </div>
+    {#each navigation as group}
+        <nav class="nav-section">
+            <div class="nav-label">{group.label}</div>
+            {#each group.items as item}
+                <a class="nav-link {currentPath === item.href ? 'is-active' : ''}" href="{item.href}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        {@html item.icon}
+                    </svg>
+                    <span>{item.text}</span>
+                </a>
+            {/each}
+        </nav>
+    {/each}
 
     <div class="sidebar-footer">
         <div class="workspace">
