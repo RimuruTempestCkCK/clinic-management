@@ -13,9 +13,9 @@ import (
 // @Success 200 {array} database.Doctor
 // @Router /doctors [get]
 func GetAll(c *gin.Context) {
-	var doctors []database.Doctor
-	database.DB.Find(&doctors)
-	c.JSON(http.StatusOK, doctors)
+	var docs []database.Doctor
+	database.DB.Preload("Specialization").Find(&docs)
+	c.JSON(http.StatusOK, docs)
 }
 
 // @Summary Create doctor

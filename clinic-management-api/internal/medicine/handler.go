@@ -1,6 +1,7 @@
 package medicine
 
 import (
+	"clinic-management-api/internal/database"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -10,7 +11,11 @@ import (
 // @Security BearerAuth
 // @Produce json
 // @Router /medicines [get]
-func GetAll(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "Not implemented"}) }
+func GetAll(c *gin.Context) {
+	var medicines []database.Medicine
+	database.DB.Find(&medicines)
+	c.JSON(http.StatusOK, medicines)
+}
 
 // @Summary Create medicines
 // @Tags medicines

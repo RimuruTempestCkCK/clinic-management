@@ -25,7 +25,7 @@ type UpdateStatusInput struct {
 // @Router /appointments [get]
 func GetAll(c *gin.Context) {
 	var apps []database.Appointment
-	database.DB.Find(&apps)
+	database.DB.Preload("Patient").Preload("Doctor").Find(&apps)
 	c.JSON(http.StatusOK, apps)
 }
 

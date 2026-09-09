@@ -1,6 +1,7 @@
 package medical_record
 
 import (
+	"clinic-management-api/internal/database"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -10,7 +11,11 @@ import (
 // @Security BearerAuth
 // @Produce json
 // @Router /medical-records [get]
-func GetAll(c *gin.Context) { c.JSON(http.StatusOK, gin.H{"message": "Not implemented"}) }
+func GetAll(c *gin.Context) {
+	var records []database.MedicalRecord
+	database.DB.Preload("Patient").Preload("Doctor").Find(&records)
+	c.JSON(http.StatusOK, records)
+}
 
 // @Summary Create medical-records
 // @Tags medical-records
