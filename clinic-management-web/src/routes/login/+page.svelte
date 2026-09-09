@@ -25,8 +25,30 @@
     <title>Sign in · Clinic Management</title>
 </svelte:head>
 
-<div class="auth-shell" style="justify-content: center; background-color: var(--c-bg);">
-    <main class="auth-main" style="flex: none; max-width: 500px; width: 100%; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+<div class="auth-shell">
+    <aside class="auth-aside" style="background-image: url('/clinic-bg.jpg'); background-size: cover; background-position: center; position: relative;">
+        <!-- Add a subtle dark overlay so text is readable if we want, or just leave it blank -->
+        <div style="position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);"></div>
+        
+        <div class="auth-brand" style="position: relative; z-index: 1;">
+            <div class="logo">
+                <svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M14.747 9.125c.527-1.426 1.736-2.573 3.317-2.573c1.643 0 2.792 1.085 3.318 2.573l6.077 16.867c.186.496.248.931.248 1.147c0 1.209-.992 2.046-2.139 2.046c-1.303 0-1.954-.682-2.264-1.611l-.931-2.915h-8.62l-.93 2.884c-.31.961-.961 1.642-2.232 1.642c-1.24 0-2.294-.93-2.294-2.17c0-.496.155-.868.217-1.023l6.233-16.867zm.34 11.256h5.891l-2.883-8.992h-.062l-2.946 8.992z"/></svg>
+            </div>
+            <div class="name">Clinic Web</div>
+        </div>
+        
+        <div class="auth-aside-body" style="position: relative; z-index: 1;">
+            <span class="auth-aside-eyebrow" style="color: rgba(255,255,255,0.8);">Clinic Management System</span>
+            <h1 style="color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Modern solutions for modern healthcare.</h1>
+            <p style="color: rgba(255,255,255,0.9); text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Faster medical records, cleaner appointments, and a design system that scales for your operational needs.</p>
+        </div>
+        
+        <div class="auth-aside-footer" style="position: relative; z-index: 1; color: rgba(255,255,255,0.6);">
+            <span>© 2026</span> <span>BUILT IN CLINIC</span>
+        </div>
+    </aside>
+
+    <main class="auth-main">
         <div class="auth-main-top">
             <a href="/" style="font-size:12.5px;color:var(--t-muted);display:inline-flex;align-items:center;gap:6px">
                 <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg> Back to home
