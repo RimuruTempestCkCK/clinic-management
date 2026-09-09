@@ -1,0 +1,667 @@
+basePath: /api/v1
+definitions:
+  clinic-management-api_internal_database.Appointment:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      doctor:
+        $ref: '#/definitions/clinic-management-api_internal_database.Doctor'
+      doctorID:
+        type: integer
+      id:
+        type: integer
+      notes:
+        type: string
+      patient:
+        $ref: '#/definitions/clinic-management-api_internal_database.Patient'
+      patientID:
+        type: integer
+      scheduleDate:
+        type: string
+      status:
+        description: PENDING, CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  clinic-management-api_internal_database.Doctor:
+    properties:
+      bio:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+      specialization:
+        $ref: '#/definitions/clinic-management-api_internal_database.Specialization'
+      specializationID:
+        type: integer
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/clinic-management-api_internal_database.User'
+      userID:
+        type: integer
+    type: object
+  clinic-management-api_internal_database.Patient:
+    properties:
+      address:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      dob:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      phone:
+        type: string
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/clinic-management-api_internal_database.User'
+      userID:
+        type: integer
+    type: object
+  clinic-management-api_internal_database.Specialization:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  clinic-management-api_internal_database.User:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      role:
+        description: ADMIN, DOCTOR, STAFF, PATIENT
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  internal_appointment.CreateAppointmentInput:
+    properties:
+      doctor_id:
+        type: integer
+      notes:
+        type: string
+      schedule_date:
+        type: string
+    required:
+    - doctor_id
+    - schedule_date
+    type: object
+  internal_appointment.UpdateStatusInput:
+    properties:
+      status:
+        enum:
+        - PENDING
+        - CONFIRMED
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+        type: string
+    required:
+    - status
+    type: object
+  internal_auth.LoginInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  internal_auth.RegisterInput:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      role:
+        enum:
+        - ADMIN
+        - DOCTOR
+        - STAFF
+        - PATIENT
+        type: string
+    required:
+    - email
+    - password
+    - role
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: REST API for Clinic Management System.
+  title: Clinic Management System API
+  version: "1.0"
+paths:
+  /appointments:
+    get:
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all appointments
+      tags:
+      - appointments
+    post:
+      consumes:
+      - application/json
+      description: Create a new appointment (defaults to PENDING)
+      parameters:
+      - description: Appointment Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_appointment.CreateAppointmentInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/clinic-management-api_internal_database.Appointment'
+      security:
+      - BearerAuth: []
+      summary: Create appointment
+      tags:
+      - appointments
+  /appointments/{id}:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete appointment
+      tags:
+      - appointments
+    get:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get appointment by ID
+      tags:
+      - appointments
+    put:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update appointment details
+      tags:
+      - appointments
+  /appointments/{id}/status:
+    put:
+      consumes:
+      - application/json
+      description: Update status (PENDING, CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED)
+      parameters:
+      - description: Appointment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Status Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_appointment.UpdateStatusInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/clinic-management-api_internal_database.Appointment'
+      security:
+      - BearerAuth: []
+      summary: Update appointment status
+      tags:
+      - appointments
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login and get JWT Token
+      parameters:
+      - description: Login Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_auth.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login User
+      tags:
+      - auth
+  /auth/logout:
+    post:
+      produces:
+      - application/json
+      responses: {}
+      summary: Logout
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      produces:
+      - application/json
+      responses: {}
+      summary: Refresh Token
+      tags:
+      - auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user (ADMIN, DOCTOR, STAFF, PATIENT)
+      parameters:
+      - description: Registration Data
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_auth.RegisterInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register User
+      tags:
+      - auth
+  /doctors:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/clinic-management-api_internal_database.Doctor'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get all doctors
+      tags:
+      - doctors
+    post:
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create doctor
+      tags:
+      - doctors
+  /doctors/{id}:
+    delete:
+      parameters:
+      - description: Doctor ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete doctor
+      tags:
+      - doctors
+    get:
+      parameters:
+      - description: Doctor ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get doctor by ID
+      tags:
+      - doctors
+    put:
+      parameters:
+      - description: Doctor ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update doctor
+      tags:
+      - doctors
+  /medical-records:
+    get:
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all medical-records
+      tags:
+      - medical-records
+    post:
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create medical-records
+      tags:
+      - medical-records
+  /medical-records/{id}:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete medical-records
+      tags:
+      - medical-records
+    get:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get medical-records by ID
+      tags:
+      - medical-records
+    put:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update medical-records
+      tags:
+      - medical-records
+  /medicines:
+    get:
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all medicines
+      tags:
+      - medicines
+    post:
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create medicines
+      tags:
+      - medicines
+  /medicines/{id}:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete medicines
+      tags:
+      - medicines
+    get:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get medicines by ID
+      tags:
+      - medicines
+    put:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update medicines
+      tags:
+      - medicines
+  /patients:
+    get:
+      description: Get a list of all patients
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/clinic-management-api_internal_database.Patient'
+            type: array
+      security:
+      - BearerAuth: []
+      summary: Get all patients
+      tags:
+      - patients
+    post:
+      description: Create a new patient
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/clinic-management-api_internal_database.Patient'
+      security:
+      - BearerAuth: []
+      summary: Create patient
+      tags:
+      - patients
+  /patients/{id}:
+    delete:
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete patient
+      tags:
+      - patients
+    get:
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get patient by ID
+      tags:
+      - patients
+    put:
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update patient
+      tags:
+      - patients
+  /prescriptions:
+    get:
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get all prescriptions
+      tags:
+      - prescriptions
+    post:
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create prescriptions
+      tags:
+      - prescriptions
+  /prescriptions/{id}:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Delete prescriptions
+      tags:
+      - prescriptions
+    get:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get prescriptions by ID
+      tags:
+      - prescriptions
+    put:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update prescriptions
+      tags:
+      - prescriptions
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
