@@ -15,13 +15,13 @@ type User struct {
 
 type Patient struct {
 	gorm.Model
-	UserID    uint
-	User      User
-	Name      string
-	DOB       time.Time
-	Gender    string
-	Phone     string
-	Address   string
+	UserID  uint
+	User    User
+	Name    string
+	DOB     time.Time
+	Gender  string
+	Phone   string
+	Address string
 }
 
 type Specialization struct {
@@ -42,13 +42,13 @@ type Doctor struct {
 
 type Appointment struct {
 	gorm.Model
-	PatientID     uint
-	Patient       Patient
-	DoctorID      uint
-	Doctor        Doctor
-	ScheduleDate  time.Time
-	Status        string `gorm:"type:varchar(20);default:'PENDING'"` // PENDING, CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED
-	Notes         string
+	PatientID    uint
+	Patient      Patient
+	DoctorID     uint
+	Doctor       Doctor
+	ScheduleDate time.Time
+	Status       string `gorm:"type:varchar(20);default:'PENDING'"` // PENDING, CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED
+	Notes        string
 }
 
 type MedicalRecord struct {

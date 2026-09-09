@@ -1,8 +1,8 @@
 package medicine
 
 import (
-    "net/http"
-    "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 // @Summary Get all medicines

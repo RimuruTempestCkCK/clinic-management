@@ -18,16 +18,15 @@ type UpdateStatusInput struct {
 	Status string `json:"status" binding:"required,oneof=PENDING CONFIRMED IN_PROGRESS COMPLETED CANCELLED"`
 }
 
-
 // @Summary Get all appointments
 // @Tags appointments
 // @Security BearerAuth
 // @Produce json
 // @Router /appointments [get]
 func GetAll(c *gin.Context) {
-    var apps []database.Appointment
-    database.DB.Find(&apps)
-    c.JSON(http.StatusOK, apps)
+	var apps []database.Appointment
+	database.DB.Find(&apps)
+	c.JSON(http.StatusOK, apps)
 }
 
 // @Summary Get appointment by ID
@@ -77,7 +76,7 @@ func CreateAppointment(c *gin.Context) {
 	}
 
 	// Business Logic: Check Availability could be added here
-	
+
 	appointment := database.Appointment{
 		PatientID:    patient.ID,
 		DoctorID:     doctor.ID,
@@ -93,7 +92,6 @@ func CreateAppointment(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, appointment)
 }
-
 
 // @Summary Update appointment status
 // @Description Update status (PENDING, CONFIRMED, IN_PROGRESS, COMPLETED, CANCELLED)

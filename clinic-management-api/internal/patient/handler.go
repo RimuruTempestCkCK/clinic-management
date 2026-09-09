@@ -1,9 +1,9 @@
 package patient
 
 import (
-    "clinic-management-api/internal/database"
-    "net/http"
-    "github.com/gin-gonic/gin"
+	"clinic-management-api/internal/database"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 // @Summary Get all patients
@@ -14,9 +14,9 @@ import (
 // @Success 200 {array} database.Patient
 // @Router /patients [get]
 func GetAll(c *gin.Context) {
-    var patients []database.Patient
-    database.DB.Find(&patients)
-    c.JSON(http.StatusOK, patients)
+	var patients []database.Patient
+	database.DB.Find(&patients)
+	c.JSON(http.StatusOK, patients)
 }
 
 // @Summary Create patient
@@ -27,7 +27,7 @@ func GetAll(c *gin.Context) {
 // @Success 201 {object} database.Patient
 // @Router /patients [post]
 func Create(c *gin.Context) {
-    c.JSON(http.StatusCreated, gin.H{"message": "Not implemented yet"})
+	c.JSON(http.StatusCreated, gin.H{"message": "Not implemented yet"})
 }
 
 // @Summary Get patient by ID
@@ -37,7 +37,7 @@ func Create(c *gin.Context) {
 // @Param id path int true "Patient ID"
 // @Router /patients/{id} [get]
 func GetByID(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{"message": "Not implemented yet"})
+	c.JSON(http.StatusOK, gin.H{"message": "Not implemented yet"})
 }
 
 // @Summary Update patient
@@ -47,7 +47,7 @@ func GetByID(c *gin.Context) {
 // @Param id path int true "Patient ID"
 // @Router /patients/{id} [put]
 func Update(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{"message": "Not implemented yet"})
+	c.JSON(http.StatusOK, gin.H{"message": "Not implemented yet"})
 }
 
 // @Summary Delete patient
@@ -57,5 +57,5 @@ func Update(c *gin.Context) {
 // @Param id path int true "Patient ID"
 // @Router /patients/{id} [delete]
 func Delete(c *gin.Context) {
-    c.JSON(http.StatusOK, gin.H{"message": "Not implemented yet"})
+	c.JSON(http.StatusOK, gin.H{"message": "Not implemented yet"})
 }

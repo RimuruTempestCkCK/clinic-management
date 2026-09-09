@@ -1,9 +1,9 @@
 package doctor
 
 import (
-    "clinic-management-api/internal/database"
-    "net/http"
-    "github.com/gin-gonic/gin"
+	"clinic-management-api/internal/database"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 // @Summary Get all doctors
@@ -13,9 +13,9 @@ import (
 // @Success 200 {array} database.Doctor
 // @Router /doctors [get]
 func GetAll(c *gin.Context) {
-    var doctors []database.Doctor
-    database.DB.Find(&doctors)
-    c.JSON(http.StatusOK, doctors)
+	var doctors []database.Doctor
+	database.DB.Find(&doctors)
+	c.JSON(http.StatusOK, doctors)
 }
 
 // @Summary Create doctor

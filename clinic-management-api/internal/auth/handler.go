@@ -20,7 +20,6 @@ type LoginInput struct {
 	Password string `json:"password" binding:"required"`
 }
 
-
 // @Summary Register User
 // @Description Register a new user (ADMIN, DOCTOR, STAFF, PATIENT)
 // @Tags auth
@@ -55,7 +54,6 @@ func Register(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully", "user_id": user.ID})
 }
-
 
 // @Summary Login User
 // @Description Login and get JWT Token

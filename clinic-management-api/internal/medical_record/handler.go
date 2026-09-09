@@ -1,8 +1,8 @@
 package medical_record
 
 import (
-    "net/http"
-    "github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 // @Summary Get all medical-records
