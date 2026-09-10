@@ -34,10 +34,10 @@
         <p class="hero-sub">Here is the overview of your clinic's operations. The data below is fetched in real-time from the API.</p>
     </div>
     <div class="hero-actions">
-        <button class="btn btn--primary">
+        <!-- <button class="btn btn--primary">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> 
             New Appointment
-        </button>
+        </button> -->
     </div>
 </section>
 

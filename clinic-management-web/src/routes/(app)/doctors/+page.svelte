@@ -27,10 +27,10 @@
         <p class="hero-sub">Manage all doctors data from this page.</p>
     </div>
     <div class="hero-actions">
-        <button class="btn btn--primary">
+        <!-- <button class="btn btn--primary">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> 
             New Doctor
-        </button>
+        </button> -->
     </div>
 </section>
 
